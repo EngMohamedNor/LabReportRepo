@@ -1,0 +1,32 @@
+
+<h1>  Quick Start Guide   </h1>
+<hr>
+
+
+* Use Admin User t Create Lecturer Accounts
+
+   user : Admin
+   Password : admin@123
+
+* Create Lecturer
+
+* Login to Lecturer Account
+
+
+* Create Course ( You can Define if students require approvel to join or Not )
+
+
+* As Student 
+
+ You can Sign up with your Student ID
+ The Provide Email and Password
+
+* Browse Courses by Deartment
+
+  - Or Search by Course Course
+  - Join Course
+  - You can see list of your course in Course Home page
+
+*
+
+

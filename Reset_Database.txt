@@ -1,0 +1,19 @@
+delete from courses_table;
+
+delete from course_groups_Table;
+
+delete from course_Group_Members_table;
+
+delete from course_students_table;
+
+delete from course_ta;
+delete from extended_deadlines_table;
+
+
+delete from lab_reports_table;
+
+delete from lab_report_submissions;
+
+delete from students_data;
+
+Delete from users_table;
