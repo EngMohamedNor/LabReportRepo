@@ -10,11 +10,23 @@
 session_start();
   date_default_timezone_set('Asia/Shanghai');
 // CONNeCTION
-$servername = "localhost";
-$username = "root";
-$password = "";
-// Create connection
-$con = new mysqli($servername, $username, $password,"lrr");
+$con=mysqli_connect("localhost","mnc","123","lrr");
+// Check connection
+if (mysqli_connect_errno())
+  {
+  echo "Failed to connect to MySQL: " . mysqli_connect_error();
+  }
+else
+{
+//echo "Connected";
+}
+
+
+
+
+
+
+
 
 error_reporting(0);
 if (!empty($_POST["frm_signup_1"])) {
@@ -23,23 +35,34 @@ if (!empty($_POST["frm_signup_1"])) {
     
     echo $student_id.' and '.$passport;
 
- //   $result = mysqli_query($con,
-   //     "SELECT * FROM students_data WHERE student_id='$student_id' and Passport_Number='$passport'");
    $result = mysqli_query($con,
+       "SELECT * FROM students_data WHERE student_id='$student_id' and (Passport_Number='$passport' or Passport_Number is null)");
+     if(mysqli_num_rows($result)==0)
+    {
+        $_SESSION["info_signup1"]="Student Information could not be verified ! Plaese contact student Management Office.";
+        header("Location: index.php");     
+        return;		
+    }
+   
+   
+   
+   $result98 = mysqli_query($con,
         "SELECT * FROM `users_table` WHERE Student_ID='$student_id'");
   
-   
-        if(mysqli_num_rows($result)==0)
+ 
+        if(mysqli_num_rows($result98)==0)
     {
          $_SESSION['user_passport']=$passport;
        $_SESSION['user_student_id']=$student_id;
       header("Location: signup.php");
+	  return;
           
     }
     else
     { 
         $_SESSION["info_signup1"]="Student ID already Used ! Please contact student Management Office if you could not login to your account.";
-        header("Location: index.php");  
+        header("Location: index.php");
+        return;		
     } 
   
   }
@@ -115,11 +138,14 @@ if (!empty($_POST["frm_login"])) {
      $password=mysqli_real_escape_string($con,$_POST["password"]);
     
     $result = mysqli_query($con,
-        "SELECT * FROM Users_Table WHERE (email='$user' or Student_ID='$user') and password='$password' and Status='Active'");
+        "SELECT * FROM Users_Table WHERE (email='$user' or Student_ID='$user') and password='$password'");
    if(mysqli_num_rows($result)==0)
     {
         $_SESSION["info_login"]="Inavlid login Information.";
-        header("Location: index.php");        
+     
+echo $_SESSION["info_login"];
+
+   header("Location: index.php");        
     }
     else 
     { 
@@ -214,7 +240,8 @@ if (!empty($_POST["frm_login"])) {
 function is_valid($file) {
  
  
-   $allowed =  array('pdf', 'rtf', 'jpg','png', 'doc', 'docx', 'xls', 'xlsx','sql','txt','md');
+   $allowed =  array('pdf', 'rtf', 'jpg','png', 'doc', 'docx', 'xls', 'xlsx','sql','txt','md','py','css','html',
+   'cvc','c','class','cpp','h','java','sh','swift','zip','rar','ods','xlr','bak','ico','swf');
    
    
    
@@ -228,7 +255,29 @@ $ext = pathinfo($filename, PATHINFO_EXTENSION);
  
  
  
+  // #### FUNCTION CREATE DIRECTORIES  ////
  
+ function Create_dir($upPath)
+{
+ try {
+ 
+  // full path 
+$tags = explode('/' ,$upPath);            // explode the full path
+$mkDir = "";
+
+    foreach($tags as $folder) {          
+        $mkDir = $mkDir . $folder ."/";   // make one directory join one other for the nest directory to make
+       // echo '"'.$mkDir.'"<br/>';         // this will show the directory created each time
+        if(!is_dir($mkDir)) {             // check if directory exist or not
+          mkdir($mkDir, 0777);            // if not exist then make the directory
+        }
+    }	
+ }
+	 catch (Exception $e) {
+ 
+  }
+  return $upPath;
+}
  
     
 
@@ -291,9 +340,11 @@ $ext = pathinfo($filename, PATHINFO_EXTENSION);
        
  // GET UPLOADED FILES
        
-       $target_dir = "Lab_Report_Assignments/";
+       $target_dir =Create_dir("Lab_Report_Assignments/".$title."/");
+
 
        $rnd=rand(10,1000);
+	   $rnd=""; // no more required , creating folder for each lab
          $targetfile = $target_dir.$rnd.$_FILES['attachment1']['name'];
            $targetfile2 = $target_dir.$rnd.$_FILES['attachment2']['name'];
              $targetfile3 = $target_dir.$rnd.$_FILES['attachment3']['name'];
@@ -380,10 +431,10 @@ $targetfile2="";
    $targetfile3="";
       $targetfile4="";
       
-  if($_FILES['attachment1']['name']!=""){ $targetfile=$rnd.$_FILES['attachment1']['name']; }
-    if($_FILES['attachment2']['name']!=""){ $targetfile2=$rnd.$_FILES['attachment2']['name']; }
-      if($_FILES['attachment3']['name']!=""){  $targetfile3= $rnd.$_FILES['attachment3']['name']; }
-        if($_FILES['attachment4']['name']!=""){   $targetfile4= $rnd.$_FILES['attachment4']['name']; }
+  if($_FILES['attachment1']['name']!=""){ $targetfile="/".$title."/".$_FILES['attachment1']['name']; }
+    if($_FILES['attachment2']['name']!=""){ $targetfile2="/".$title."/".$_FILES['attachment2']['name']; }
+      if($_FILES['attachment3']['name']!=""){  $targetfile3= "/".$title."/".$_FILES['attachment3']['name']; }
+        if($_FILES['attachment4']['name']!=""){   $targetfile4= "/".$title."/".$_FILES['attachment4']['name']; }
         
   
   
@@ -476,9 +527,16 @@ if($result>20)
        
  // GET UPLOADED FILES
        
-       $target_dir = "Lab_Report_Submisions/";
+     
 
-       
+         $labName = mysqli_query($con,"SELECT Title FROM `lab_reports_table` WHERE Lab_Report_ID=$lab_id");
+     while($row = mysqli_fetch_assoc($labName)) {$lab_name=$row['Title'];} 
+
+
+       $target_dir =Create_dir("Lab_Report_Submisions/".$student_id."/".$lab_name."/");
+	   
+	   
+	   
          $targetfile = $target_dir.$_FILES['attachment1']['name'];
            $targetfile2 = $target_dir.$_FILES['attachment2']['name'];
              $targetfile3 = $target_dir.$_FILES['attachment3']['name'];
@@ -583,10 +641,25 @@ if($result>20)
   echo $count." File(s) uploaded";
   
   //CLEAN
-    $targetfile=$_FILES['attachment1']['name'];
-      $targetfile2=$_FILES['attachment2']['name'];
-       $targetfile3= $_FILES['attachment3']['name'];
-         $targetfile4= $_FILES['attachment4']['name'];
+  $targetfile1="";
+    $targetfile2="";
+	  $targetfile3="";  
+	  $targetfile4="";
+  
+  if(strlen($_FILES['attachment1']['name']) > 2 ) {
+    $targetfile="/".$student_id."/".$lab_name."/".$_FILES['attachment1']['name'];
+  }
+      
+	    if(strlen($_FILES['attachment2']['name']) > 2 ) {
+		$targetfile2="/".$student_id."/".$lab_name."/".$_FILES['attachment2']['name']; }
+		
+		  if(strlen($_FILES['attachment3']['name']) > 2 ) {
+		  $targetfile3= "/".$student_id."/".$lab_name."/".$_FILES['attachment3']['name'];}
+		  
+		    if(strlen($_FILES['attachment4']['name']) > 2 ) {
+         $targetfile4= "/".$student_id."/".$lab_name."/".$_FILES['attachment4']['name'];
+			}
+	
   
          $sql1="Delete from  lab_report_submissions where Lab_Report_ID=$lab_id and Student_id=$student_id and Course_Group_id=$group_id";
         if ($con->query($sql1) === TRUE) {
