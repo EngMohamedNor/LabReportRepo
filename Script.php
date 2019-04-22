@@ -23,11 +23,6 @@ else
 
 
 
-
-
-
-
-
 error_reporting(0);
 if (!empty($_POST["frm_signup_1"])) {
      $student_id=mysqli_real_escape_string($con,$_POST["student_id"]);
@@ -80,6 +75,8 @@ if (!empty($_POST["frm_signup_1"])) {
     
     
     
+
+
     // ############################### CREATE STUDENT USER ##################################
     if (!empty($_POST["frm_signup_2"])) {
      $email=mysqli_real_escape_string($con,$_POST["email"]);
@@ -1191,9 +1188,13 @@ if($result>20)
  
  
  
+
+
+
+
  
  
- //action=passchange&uid=1&pass=1929
+ // Change Password / Status of User Account
  
    if (!empty($_GET["action"])) {
 	   
@@ -1326,7 +1327,11 @@ if($result>20)
  
  
  
- //exportgrade
+
+
+
+
+ // Export grade to Excel File
  
    if (!empty($_GET["exportgrade"])) {
 	   
