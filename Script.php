@@ -114,8 +114,9 @@ if (!empty($_POST["frm_signup_1"])) {
         header("Location: signup.php"); 
         return;       
     }
-    $sql= "INSERT INTO `users_table`(`Email`, `Password`, `Full_Name`, `UserType`, `Student_ID`, `Passport_Number`) VALUES "
-            . "('$email','$password','$fullname','Student','$student_id','$passport')";
+    $hash_pass=hash('sha512', $password);
+    $sql= "INSERT INTO `users_table`(`Email`, `HashPassword`, `Full_Name`, `UserType`, `Student_ID`, `Passport_Number`) VALUES "
+            . "('$email','$hash_pass','$fullname','Student','$student_id','$passport')";
     
    if ($con->query($sql) === TRUE) {
    header("Location: Courses.php"); 
@@ -133,9 +134,9 @@ if (!empty($_POST["frm_signup_1"])) {
 if (!empty($_POST["frm_login"])) {
      $user=mysqli_real_escape_string($con,$_POST["user"]);
      $password=mysqli_real_escape_string($con,$_POST["password"]);
-    
+     $hashed_password=hash('sha512', $password);
     $result = mysqli_query($con,
-        "SELECT * FROM Users_Table WHERE (email='$user' or Student_ID='$user') and password='$password'");
+        "SELECT * FROM Users_Table WHERE (email='$user' or Student_ID='$user') and HashPassword='$hashed_password'");
    if(mysqli_num_rows($result)==0)
     {
         $_SESSION["info_login"]="Inavlid login Information.";
@@ -1206,7 +1207,8 @@ if($result>20)
 		 
 	   if($action=="passchange")
 	   {
-		 $sql= "UPDATE users_table set Password='$pass' where User_ID=$uid;";
+      $hashed_password=hash('sha512', $pass);
+		 $sql= "UPDATE users_table set HashPassword='$hashed_password' where User_ID=$uid;";
    if ($con->query($sql) === TRUE) {
        
        error_reporting(0);
