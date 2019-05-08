@@ -1,6 +1,23 @@
 <?php
+session_start();
+
 error_reporting(0);
   date_default_timezone_set('Asia/Shanghai');
+
+
+$con=mysqli_connect("localhost","mnc","123","lrr");
+// Check connection
+if (mysqli_connect_errno())
+  {
+  echo "Failed to connect to MySQL: " . mysqli_connect_error();
+  }
+else
+{
+
+}
+
+
+
 ?>
 
 
@@ -11,7 +28,9 @@ error_reporting(0);
  
    
 <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
-<link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+
+<!--<link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"/> -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/fontawesome.min.css" />
 <script src="css/jquery.min.js" type="text/javascript"></script>
 <script src="css/bootsrap.min.js" type="text/javascript"></script>
 <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
@@ -32,7 +51,7 @@ error_reporting(0);
  ?>   
     
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark" style="padding-left:150px;padding-right:150px;margin:auto;">
-  <a class="navbar-brand" href="~\..\index.php">    <img src="../logo.png" style="width:30px;heigh:30px;"> LRRS</a>
+  <a class="navbar-brand" href="~\..\index.php">    <img src="../nor/logo.png" style="width:30px;heigh:30px;"> LRRS</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
