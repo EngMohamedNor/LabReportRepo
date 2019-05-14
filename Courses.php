@@ -11,6 +11,13 @@ $user_d=$_SESSION['user_id'];
 
 
 
+
+
+
+
+
+
+
  if( $_SESSION['user_type']=="Lecturer" || $_SESSION['user_type']=="TA")
         {
     ?>
@@ -613,8 +620,8 @@ echo "No results found for your Search <hr>";
                                 $msg2="Send Joining Request";
                             }
                
-                                  echo "<div class='btn btn-default'>
-  ($code) - $name  <a href='~\..\Script.php?JoinCourse=y&id=$id&std=$student_id&joining=$v' class='btn-sm btn-success' onclick=return confirm(\"are you sure to join this course?\")' > $msg2 </a>
+                                  echo "<div class='btn btn-default' style='word-wrap:break-word'>
+  ($code) - $name <br>($url) <br>  <a href='~\..\Script.php?JoinCourse=y&id=$id&std=$student_id&joining=$v' class='btn-sm btn-success' onclick=return confirm(\"are you sure to join this course?\")' > $msg2 </a>
    <br> <span style='font-size:8pt'>Faculty : $faculty  Year :   $academic  Lecturer  :$lecturer </span><br>$msg</div>
                         ";
                
@@ -658,8 +665,8 @@ INNER JOIN course_students_table on course_students_table.Course_ID=courses_tabl
                             
                if($Status=="Joined")
                {
-                 echo "<a href='~\..\Course.php?url=$url'>   <div class='btn btn-default'>
-  ($code) - $name       &nbsp;&nbsp;&nbsp; <i class='fa fa-check-circle'></i> $Status   &nbsp;&nbsp;&nbsp;&nbsp; <a href='~\..\Course.php?url=$url' class='btn-sm btn-primary'> Open</a>
+                 echo "<a href='~\..\Course.php?url=$url'>   <div class='btn btn-default' style='word-wrap:break-word'>
+  ($code) - $name <br>($url)       &nbsp;&nbsp;&nbsp; <i class='fa fa-check-circle'></i> $Status   &nbsp;&nbsp;&nbsp;&nbsp; <a href='~\..\Course.php?url=$url' class='btn-sm btn-primary'> Open</a>
    <br> <span style='font-size:8pt'>Faculty : $faculty  Year :   $academic  Lecturer  :$lecturer </span></div></a>
                         ";  
                }
