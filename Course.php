@@ -27,7 +27,7 @@ include 'Header.php';
                          
                 echo    "  <div class='alert' style='margin-left:20px;border-bottom:2px solid #1D91EF;'> <a href='~\..\Courses.php?course=$url'>
   Courses > $name ($code) > Lab Reports
-   <br> <span style='font-size:8pt'>Faculty : $faculty  Year :   $academic  Lecturer  :$lecturer </span>
+   <br> <span style='font-size:8pt'>Faculty : $faculty  Year :   $academic  Lecturer  :$lecturer  </span>
        
 
 </a></div>
@@ -306,16 +306,16 @@ if(mysqli_num_rows($resultx)==0)
           
           <div id="menu4" class="container tab-pane"><br>
          <?php
-        
+      
 $resultx  = mysqli_query($con,"SELECT `Submission_ID`, `Submission_Date`, lab_reports_table.`Lab_Report_ID`, `Student_id`, "
         . "`Course_Group_id`, `Notes`, lab_report_submissions.`Marks`, `Status`, lab_reports_table.Title Lab_Title,lab_reports_table.Marks Original_marks FROM `lab_report_submissions` "
         . "INNER JOIN lab_reports_table on lab_reports_table.Lab_Report_ID=lab_report_submissions.Lab_Report_ID "
-        . "WHERE" 
+        . "WHERE lab_report_submissions.Student_id='$student_id' and" 
         . ""
         . ""
         . ""
         . " lab_reports_table.Lab_Report_ID  in (select Lab_Report_ID from lab_report_submissions"
-         . " where (Status='Marked' or Status='Remarking') and (Student_id=$student_id or Course_Group_id=$group_id)  and Course_ID=$course_id) ORDER by Submission_ID DESC");
+         . " where  (Status='Marked' or Status='Remarking') and (Student_id=$student_id)  and Course_ID=$course_id) ORDER by Submission_ID DESC");
 
     
 
