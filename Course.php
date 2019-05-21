@@ -246,6 +246,7 @@ if(mysqli_num_rows($resultx)==0)
      echo "You have  no Lab report submissions in this course";
      
     } else { while($row = mysqli_fetch_assoc($resultx)) {
+      $lab_repo_id=$row['Lab_Report_ID'];
 			$title=$row['Title'];
                         $marks=$row['Marks'];
                         $ins=$row['Instructions'];
@@ -281,8 +282,54 @@ if(mysqli_num_rows($resultx)==0)
    
            echo "   <k href='#'>   <div class='btn btn-default break-word' style='dislay:block; word-wrap: break-word; border: 1px solid #F0F0F0;border-left: 4px solid #03407B;'>
   $title <br> <span style='font-size:8pt'> $ins</span> 
-   <br> <span style='font-size:8pt'>Posted : $posted  Deadline :   $deadline  ($marks Marks) &nbsp; &nbsp;  $submittedx&nbsp; <span class='btn-sm btn-success' style='margin-left:50px;'><i class='fa fa-Edit-circle'></i>  Submitted </span><br> Attachments : $full_link </span>
-</div></k>";
+   <br> <span style='font-size:8pt'>Posted : $posted  Deadline :   $deadline  ($marks Marks) &nbsp; &nbsp;  $submittedx&nbsp; <span class='btn-sm btn-success' style='margin-left:50px;'><i class='fa fa-Edit-circle'></i>  Submitted </span><br> Assignment Attachments : $full_link
+   &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<br> Submission Files :";
+
+
+$Sub_result = mysqli_query($con,"SELECT `Submission_ID`, `Submission_Date`, lab_report_submissions.Lab_Report_ID,
+lab_report_submissions.Student_id sub_std, lab_report_submissions.Course_Group_id, `Attachment1`,
+`Notes`, `Attachment2`, `Attachment3`, `Attachment4`, `Marks`, lab_report_submissions.Status, 
+`Title`,users_table.Full_Name,course_group_members_table.Student_ID
+FROM `lab_report_submissions`
+Left JOIN users_table  on users_table.Student_ID=lab_report_submissions.Student_id
+left JOIN course_group_members_table on course_group_members_table.Course_Group_id=lab_report_submissions.Course_Group_id
+where Lab_Report_ID=$lab_repo_id and lab_report_submissions.Student_id='$student_id'"); 
+
+if(mysqli_num_rows($Sub_result)==0)
+    {
+     echo "No Attachments found.";
+     
+    } else { while($row = mysqli_fetch_assoc($Sub_result)) {
+			$at1=$row['Attachment1'];
+                        $at2=$row['Attachment2'];
+                        $at3=$row['Attachment3'];
+                        $at4=$row['Attachment4'];
+
+                        $full_link="<a href='~\..\Lab_Report_Submisions\\$at1'>$at1</a>";      
+                                     
+                        if($at2!=""){
+                          $full_link= $full_link."| <a href='~\..\Lab_Report_Submisions\\$at2'>$at2</a>";    
+                        }
+                         if($at3!=""){
+                          $full_link= $full_link."| <a href='~\..\Lab_Report_Submisions\\$at3'>$at3</a>";    
+                        }
+                        
+                         if($at4!=""){
+                          $full_link= $full_link."| <a href='~\..\Lab_Report_Submisions\\$at4'>$at4</a>";    
+                        }
+
+                        echo $full_link;
+
+    }
+  }
+
+
+
+
+
+   echo "</span></div></k>";
+
+  
                 
                                       }}
        echo "";
@@ -352,10 +399,55 @@ if(mysqli_num_rows($resultx)==0)
                               
    
            echo "   <k href='#'>   <div class='btn btn-default break-word' style='dislay:block; word-wrap: break-word; border: 1px solid #F0F0F0;border-left: 4px solid #03407B;'>
-  $title  <b> ($marks Marks out of $Originalmarks)</b><br><small> Lecturer Feedback : $notes </small> &nbsp; $remarking </div></k>";
+  $title  <b> ($marks Marks out of $Originalmarks)</b><br><small> Lecturer Feedback : $notes </small> &nbsp; $remarking   <br> Submission files :";
                 
+
+
+  $Sub_result = mysqli_query($con,"SELECT `Submission_ID`, `Submission_Date`, lab_report_submissions.Lab_Report_ID,
+  lab_report_submissions.Student_id sub_std, lab_report_submissions.Course_Group_id, `Attachment1`,
+  `Notes`, `Attachment2`, `Attachment3`, `Attachment4`, `Marks`, lab_report_submissions.Status, 
+  `Title`,users_table.Full_Name,course_group_members_table.Student_ID
+  FROM `lab_report_submissions`
+  Left JOIN users_table  on users_table.Student_ID=lab_report_submissions.Student_id
+  left JOIN course_group_members_table on course_group_members_table.Course_Group_id=lab_report_submissions.Course_Group_id
+  where Lab_Report_ID=$id and lab_report_submissions.Student_id='$student_id'"); 
+  
+  if(mysqli_num_rows($Sub_result)==0)
+      {
+       echo "No Attachments found.";
+       
+      } else { while($row = mysqli_fetch_assoc($Sub_result)) {
+        $at1=$row['Attachment1'];
+                          $at2=$row['Attachment2'];
+                          $at3=$row['Attachment3'];
+                          $at4=$row['Attachment4'];
+  
+                          $full_link="<a href='~\..\Lab_Report_Submisions\\$at1'>$at1</a>";      
+                                       
+                          if($at2!=""){
+                            $full_link= $full_link."| <a href='~\..\Lab_Report_Submisions\\$at2'>$at2</a>";    
+                          }
+                           if($at3!=""){
+                            $full_link= $full_link."| <a href='~\..\Lab_Report_Submisions\\$at3'>$at3</a>";    
+                          }
+                          
+                           if($at4!=""){
+                            $full_link= $full_link."| <a href='~\..\Lab_Report_Submisions\\$at4'>$at4</a>";    
+                          }
+  
+                          echo $full_link;
+  
+      }
+    }
+
+
+
+
+
+
+
                                       }}
-       echo "";
+       echo "</div></k>";
        ?>  
            
            
