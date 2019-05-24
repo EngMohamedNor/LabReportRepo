@@ -5,6 +5,8 @@
 $page='Home';
 include 'Header.php';
 
+session_start();
+
 ?>
 
 
@@ -15,7 +17,7 @@ include 'Header.php';
 
     <div class="col-md-4">
         <br><br>
-        <img src="../logo_text.png" style="width">
+        <img src="../nor/logo_text.png" style="width">
         <h1> Lab Report Repository System  </h1>
         <br><br>
     </div>
@@ -37,8 +39,9 @@ Student ID / Email
  
   Password
 <input type="password" class="form-control"  name="password" placeholder="password">
-  <br>
-  <input type="submit" class="btn btn-primary" value="Login"><br>
+  <br> 
+  <input type="submit" class="btn btn-primary" value="Login"><br> <a href="recover_password.php" style="font-weight:bold;color:orange">Recover lost password</a>
+
 <?php 
 
 error_reporting(E_ALL);
@@ -49,6 +52,7 @@ if(isset($_SESSION['info_login'])) {
 
 ?>
 </form>
+
 </div>
   
 </div>
@@ -65,10 +69,10 @@ if(isset($_SESSION['info_login'])) {
     <input type="hidden" name="frm_signup_1" value="true"/>
     
     Student ID
-<input type="text" name="student_id" placeholder="Entre your Student ID" class="form-control">
+<input type="text" name="student_id" placeholder="Entre your Student ID" class="form-control" required="">
 
 Your Passport / National ID
-  <input type="text" class="form-control"  name="passport" placeholder="Your Passport / National ID">
+  <input type="text" class="form-control"  name="passport" placeholder="(Optional)">
   <br>
   <input type="submit" class="btn btn-primary" value="Next"> <br>
 <?php 
@@ -100,7 +104,25 @@ if(isset($_SESSION['info_signup1'])) {
 
 
 
+<hr>
 
+<div style="" id="footer">
+Developed by : Mohamed Nor (201825800050)-houzi you can submit your suggestions & bug reports to  mohamednor@qq.com  <small>Last Update : 24/05/2019 by <i>nor</i> </small>
+
+</div>
 
 </body>
+
+<style>
+#footer{
+ position:fixed;
+ bottom:0;
+ left:0;
+background-color:#03417C;
+color:#FFF;
+text-align:center;
+width:100%;
+}
+</style>
 </html>
+

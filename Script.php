@@ -23,6 +23,11 @@ else
 
 
 
+
+
+
+
+
 error_reporting(0);
 if (!empty($_POST["frm_signup_1"])) {
      $student_id=mysqli_real_escape_string($con,$_POST["student_id"]);
@@ -75,8 +80,6 @@ if (!empty($_POST["frm_signup_1"])) {
     
     
     
-
-
     // ############################### CREATE STUDENT USER ##################################
     if (!empty($_POST["frm_signup_2"])) {
      $email=mysqli_real_escape_string($con,$_POST["email"]);
@@ -114,9 +117,8 @@ if (!empty($_POST["frm_signup_1"])) {
         header("Location: signup.php"); 
         return;       
     }
-    $hash_pass=hash('sha512', $password);
-    $sql= "INSERT INTO `users_table`(`Email`, `HashPassword`, `Full_Name`, `UserType`, `Student_ID`, `Passport_Number`) VALUES "
-            . "('$email','$hash_pass','$fullname','Student','$student_id','$passport')";
+    $sql= "INSERT INTO `users_table`(`Email`, `Password`, `Full_Name`, `UserType`, `Student_ID`, `Passport_Number`) VALUES "
+            . "('$email','$password','$fullname','Student','$student_id','$passport')";
     
    if ($con->query($sql) === TRUE) {
    header("Location: Courses.php"); 
@@ -132,54 +134,218 @@ if (!empty($_POST["frm_signup_1"])) {
 // ################################ LOGIN  #####################################
 
 if (!empty($_POST["frm_login"])) {
-     $user=mysqli_real_escape_string($con,$_POST["user"]);
-     $password=mysqli_real_escape_string($con,$_POST["password"]);
-     $hashed_password=hash('sha512', $password);
-    $result = mysqli_query($con,
-        "SELECT * FROM Users_Table WHERE (email='$user' or Student_ID='$user') and HashPassword='$hashed_password'");
-   if(mysqli_num_rows($result)==0)
-    {
-        $_SESSION["info_login"]="Inavlid login Information.";
-     
+  $user=mysqli_real_escape_string($con,$_POST["user"]);
+  $password=mysqli_real_escape_string($con,$_POST["password"]);
+  $hashed_password=hash('sha512', $password);
+ $result = mysqli_query($con,
+     "SELECT * FROM Users_Table WHERE (email='$user' or Student_ID='$user') and HashPassword='$hashed_password'");
+if(mysqli_num_rows($result)==0)
+ {
+     $_SESSION["info_login"]="Inavlid login Information.";
+  
 echo $_SESSION["info_login"];
 
-   header("Location: index.php");        
-    }
-    else 
-    { 
-        while($row = mysqli_fetch_assoc($result)) {
-         $_SESSION['user_id']=$row['User_ID'];
-        $_SESSION['user_email']=$row['Email'];
-        $_SESSION['user_student_id']=$row['Student_ID'];
-        $_SESSION['user_type']=$row['UserType'];
-       $_SESSION['user_fullname']=$row['Full_Name'];
-        
-        if( $_SESSION['user_type']=="Student")
-        {
-          header("Location: Courses.php");
-        }     
-   
-        if( $_SESSION['user_type']=="Lecturer")
-        {
-          header("Location: Courses.php");
-        }
-        
-          if( $_SESSION['user_type']=="TA")
-        {
-          header("Location: Courses.php");
-        }
-         
-        if( $_SESSION['user_type']=="Admin")
-        {
-          header("Location: Admin.php");
-        }
-       
-        
-       
-    }
-    }
-}
+header("Location: index.php");        
+ }
+ else 
+ { 
+     while($row = mysqli_fetch_assoc($result)) {
+      $_SESSION['user_id']=$row['User_ID'];
+     $_SESSION['user_email']=$row['Email'];
+     $_SESSION['user_student_id']=$row['Student_ID'];
+     $_SESSION['user_type']=$row['UserType'];
+    $_SESSION['user_fullname']=$row['Full_Name'];
+     
+     if( $_SESSION['user_type']=="Student")
+     {
+       header("Location: Courses.php");
+     }     
+
+     if( $_SESSION['user_type']=="Lecturer")
+     {
+       header("Location: Courses.php");
+     }
+     
+       if( $_SESSION['user_type']=="TA")
+     {
+       header("Location: Courses.php");
+     }
+      
+     if( $_SESSION['user_type']=="Admin")
+     {
+       header("Location: Admin.php");
+     }
     
+     
+    
+ }
+ }
+}
+ 
+
+
+
+
+
+
+
+
+// ################################ Recover Password  #####################################
+
+if (!empty($_POST["frm_recover_password"])) {
+  $email=mysqli_real_escape_string($con,$_POST["email"]);
+ 
+
+ $result = mysqli_query($con,
+     "SELECT * FROM Users_Table WHERE email='$email'");
+if(mysqli_num_rows($result)==0)
+ {
+     $_SESSION["info_recover_password"]="Email address is not recognised.";
+  
+
+echo "Email address was not recognised";
+return;
+header("Location: recover_password.php");        
+ }
+ else 
+ { 
+     while($row = mysqli_fetch_assoc($result)) {
+
+      $userid=$row['User_ID'];
+
+     $email=urlencode($row['Email']);
+     $pure_email=$row['Email'];
+     $id=$row['Student_ID'];
+    
+     $token=$userid*$userid*$userid+$userid*0.00343;
+
+    $name=$row['Full_Name'];
+$link="<a href='http://118.25.96.118/nor/Reset_password.php?token=$token&email=$email'>Click Here (点击这里) </a>";
+$msg=urlencode(" <h3>Lab Report Repository System - ZJNU</h3>  <br>  Hi <b>"
+.$name. 
+" </b> Here is your password recovery link , "
+.$link.
+"   to reset your password , <br> please ignore this message if you did not requested password recovery.<br><br> <hr><br><br>  
+您好 $name, 这是你的密码恢复链接，点击上面的链接 重置你的密码，
+如果您没有请求密码恢复，请忽略此消息。  <br><br><br><br><br> <small>LRR System by Mohamed Nor. </small><hr>");
+    
+
+$title=urlencode("Password recovery Request for LRR system - ZJNU ");
+
+
+$url="http://sms.samesoftware.com/email/send/?Subject=$title&Body=$msg&ToAddress=$email&token=s1234";
+
+//$response = file_get_contents($url);
+
+
+$ch = curl_init();
+
+    curl_setopt($ch, CURLOPT_HEADER, 0);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_URL, $url);
+
+    $data = curl_exec($ch);
+  
+    if(curl_errno($ch))
+    echo 'Curl error: '.curl_error($ch);
+curl_close ($ch); 
+
+
+
+echo $data."<hr>";
+
+
+
+$_SESSION["info_login"]="<br> Please check your Inbox & Junk folders for the recovery email , a reset link was sent to your email <b> $pure_email </b>";
+
+header("Location: index.php");
+
+
+     }
+    }
+  }
+
+
+
+
+
+
+
+
+// ################################ RESET Password  #####################################
+
+if (!empty($_POST["frm_reset_password"])) {
+  $password=mysqli_real_escape_string($con,$_POST["password"]);
+  $token=mysqli_real_escape_string($con,$_POST["token"]);
+  $email=mysqli_real_escape_string($con,$_POST["email"]);
+ $result = mysqli_query($con,
+     "SELECT * FROM Users_Table WHERE email='$email'");
+if(mysqli_num_rows($result)==0)
+ {
+    
+echo "invalid email";
+return;
+       
+ }
+ else 
+ { 
+     while($row = mysqli_fetch_assoc($result)) {
+
+      $userid=$row['User_ID'];
+
+     $email=$row['Email'];
+     $id=$row['Student_ID'];
+    
+     $user_token=$userid*$userid*$userid+$userid*0.00343;
+if($user_token==$token)
+{
+// Password Update
+
+  // Password Update
+  $hashed_password=hash('sha512', $password);
+		 $sql= "UPDATE users_table set HashPassword='$hashed_password' where User_ID=$userid;";
+   if ($con->query($sql) === TRUE) {
+       
+       error_reporting(0);
+
+	    $_SESSION["info_login"]=" Password changed successfully , you can login now with your new password ";
+   header("Location: index.php");
+                                   
+	   }
+	   else {
+    echo "Error: " . $sql . "<br>" . $con->error;
+}
+
+} else
+{
+  echo "Invalid Token ";
+}
+
+    
+
+
+     }
+    }
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1189,13 +1355,9 @@ if($result>20)
  
  
  
-
-
-
-
  
  
- // Change Password / Status of User Account
+ //action=passchange&uid=1&pass=1929
  
    if (!empty($_GET["action"])) {
 	   
@@ -1207,8 +1369,7 @@ if($result>20)
 		 
 	   if($action=="passchange")
 	   {
-      $hashed_password=hash('sha512', $pass);
-		 $sql= "UPDATE users_table set HashPassword='$hashed_password' where User_ID=$uid;";
+		 $sql= "UPDATE users_table set Password='$pass' where User_ID=$uid;";
    if ($con->query($sql) === TRUE) {
        
        error_reporting(0);
@@ -1329,11 +1490,7 @@ if($result>20)
  
  
  
-
-
-
-
- // Export grade to Excel File
+ //exportgrade
  
    if (!empty($_GET["exportgrade"])) {
 	   
@@ -1407,3 +1564,4 @@ print "$header\n$data";
 
    }
    
+
