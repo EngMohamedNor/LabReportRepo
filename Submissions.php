@@ -90,7 +90,8 @@ $resultx1 = mysqli_query($con,"Select Count(*) as cnt from lab_report_submission
 
  
 ?>
-   <b>Lab Report Submissions (<?php echo $count_subs;?>)</b>
+   
+    <b>Lab Report Submissions (<?php echo $count_subs;?>)</b>
     <!-- Nav tabs -->
   <ul class="nav nav-tabs" role="tablist">
     <li class="nav-item">
@@ -311,7 +312,8 @@ where Lab_Report_ID=$id and lab_report_submissions.Status='Remarking'");
 } 
 else
 {
-    $resulty  = mysqli_query($con,"SELECT `Submission_ID`, `Submission_Date`, lab_report_submissions.Lab_Report_ID,
+    $resulty  = mysqli_query($con,"SELECT `Submission_ID`, `Submission_Date`, lab_report_submissions.Lab_Report_ID, 
+    lab_report_submissions.Remarking_Reason,
      lab_report_submissions.Student_id sub_std, lab_report_submissions.Course_Group_id, `Attachment1`,
      `Notes`, `Attachment2`, `Attachment3`, `Attachment4`, lab_report_submissions.Marks, lab_report_submissions.Status, 
      `Title`,users_table.Full_Name,course_group_members_table.Student_ID
@@ -331,12 +333,15 @@ where Lab_Report_ID=$id and lab_report_submissions.Status='Remarking'");
                         //$ins=$row['Notes']; 
  $posted=$row['Submission_Date'];	
                          $deadline=$row['Deadline'];
+
                           $att1=$row['Attachment1'];
                               $att2=$row['Attachment2'];
                                    $att3=$row['Attachment3'];
                                     $att4=$row['Attachment4'];
                                      $labid=$row['Lab_Report_ID'];
                                      
+                     $remarking_reason=$row['Remarking_Reason'];
+
                                      $submitted_std=$row['Student_id'];
                                      $submitted_group=$row['Course_Group_id'];
                                      $Submission_ID=$row['Submission_ID'];
@@ -364,7 +369,7 @@ where Lab_Report_ID=$id and lab_report_submissions.Status='Remarking'");
                                        $full_link= $full_link."| <a href='~\..\Lab_Report_Submisions\\$att4'>$att4</a>";    
                                      }
                 echo "   <k href='#'>   <div class='btn btn-default break-word' style='dislay:block; word-wrap: break-word; border: 1px solid #F0F0F0;border-left: 4px solid #03407B;'>
-  $title  <br> by : <b> $submitted_by  &nbsp; &nbsp;&nbsp;&nbsp;&nbsp; [ Marked $Marks ] </b>
+  $title  <br> by : <b> $submitted_by  &nbsp; &nbsp;&nbsp;&nbsp;&nbsp; [ Marked $Marks ] </b> <br> Remarking Reason : <b>$remarking_reason </b>
    <hr> <span style='font-size:8pt'>Submitted : $posted        <b>  </b> "
                         . "<button class='btn-sm btn-info' style='margin-left:50px;' onclick='mark($Submission_ID,\"$title\",$total)'>  Re-Mark Submission</button>"
                         . " &nbsp; &nbsp;&nbsp;&nbsp;<a href='~\..\Script.php?ignoreremarking=yes&id=$id&subid=$Submission_ID&header=$header&total=$total&status=Marked' class='btn-sm btn-warning'>  Ignore Request </a>"

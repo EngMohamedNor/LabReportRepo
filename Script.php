@@ -1004,9 +1004,9 @@ if($result>20)
 	    $url=$_GET["url"];
            
             $status= $_GET["status"];
-            
+            $details=$_GET["details"];
            
-              $sql="UPDATE `lab_report_submissions` SET `Status`='Remarking' WHERE Submission_ID=$id
+              $sql="UPDATE `lab_report_submissions` SET `Status`='Remarking',Remarking_Reason='$details' WHERE Submission_ID=$id
               ";
     
      if ($con->query($sql) === TRUE) {

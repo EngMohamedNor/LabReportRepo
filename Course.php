@@ -355,7 +355,9 @@ if(mysqli_num_rows($Sub_result)==0)
          <?php
       
 $resultx  = mysqli_query($con,"SELECT `Submission_ID`, `Submission_Date`, lab_reports_table.`Lab_Report_ID`, `Student_id`, "
-        . "`Course_Group_id`, `Notes`, lab_report_submissions.`Marks`, `Status`, lab_reports_table.Title Lab_Title,lab_reports_table.Marks Original_marks FROM `lab_report_submissions` "
+        . "`Course_Group_id`, `Notes`, lab_report_submissions.`Marks`,
+        lab_report_submissions.Remarking_Reason,
+        `Status`, lab_reports_table.Title Lab_Title,lab_reports_table.Marks Original_marks FROM `lab_report_submissions` "
         . "INNER JOIN lab_reports_table on lab_reports_table.Lab_Report_ID=lab_report_submissions.Lab_Report_ID "
         . "WHERE lab_report_submissions.Student_id='$student_id' and" 
         . ""
@@ -386,14 +388,15 @@ if(mysqli_num_rows($resultx)==0)
                               $Submission_ID=$row['Submission_ID']; 
                               $notes=$row['Notes'];
                                 $status= $row['Status'];
-   
+                                $remarking_reason=$row['Remarking_Reason'];
                               if($status=='Marked')
                               {
-                                  $remarking="<a href='~\..\Script.php?remarking=yes&id=$Submission_ID&url=$url&status=Remarking' class='btn-sm btn-success'>  Request Remarking </a>";
+                                $rm_data="\Script.php?remarking=yes&id=$Submission_ID&url=$url&status=Remarking";
+                                  $remarking="<button  onclick='remarking(\"$rm_data\")' class='btn-sm btn-success'>  Request Remarking </button>";
                               }
                               if($status=='Remarking')
                               {
-                                     $remarking="<span  style='color:orange'><i class='fa fa-info-circle'></i> Remarking Request sent </span>";
+                                     $remarking="<span  style='color:orange'><i class='fa fa-info-circle'></i> Remarking Request sent </span> <br> Remarking Reason:<i>$remarking_reason </i> <br>";
                               
                               }
                               
@@ -743,6 +746,15 @@ where course_group_members_table.Course_Group_id=$id");
     }catch(e){ alert(e); }
 }
   
+
+
+function remarking(data)
+{
+  
+  var details=prompt("Please enter Remarking Reason","");
+  
+ window.location.href=data+"&details="+details;
+}
   
     </script>
     
