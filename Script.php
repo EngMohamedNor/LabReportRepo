@@ -835,9 +835,9 @@ if($result>20)
         }
        
        $sql="INSERT INTO `lab_report_submissions`(`Submission_Date`, `Lab_Report_ID`, `Student_id`,"
-               . " `Course_Group_id`, `Attachment1`, `Notes`, `Attachment2`, `Attachment3`, `Attachment4`, `Status`, `Title`)"
+               . " `Course_Group_id`, `Attachment1`, `Notes`, `Attachment2`, `Attachment3`, `Attachment4`, `Status`, `Title`,`Remarking_Reason`)"
                . " VALUES ('$date',$lab_id,$student_id,$group_id,'$targetfile','$instructions','$targetfile2','$targetfile3','$targetfile4',"
-               . "'Pending','$title')";
+               . "'Pending','$title','')";
        
       
     
@@ -847,7 +847,7 @@ if($result>20)
    header("Location: Course.php?url=".$url); 
    
 } else {
-    echo "Error: " . $sql . "<br>" . $conn->error;
+    echo "Error: <br>" . $con->error;
 }
  }
  
