@@ -124,7 +124,7 @@ if($Report_Type=="Group")
      `Title`,course_groups_table.Group_Name
 FROM `lab_report_submissions`
 left JOIN course_groups_table on course_groups_table.Course_Group_id=lab_report_submissions.Course_Group_id
-where Lab_Report_ID=$id and lab_report_submissions.Status='Pending'");
+where Lab_Report_ID=$id and lab_report_submissions.Status='Pending' order by Submission_Date desc");
 }
  else
  {
@@ -135,7 +135,7 @@ where Lab_Report_ID=$id and lab_report_submissions.Status='Pending'");
 FROM `lab_report_submissions`
 Left JOIN users_table  on users_table.Student_ID=lab_report_submissions.Student_id
 left JOIN course_group_members_table on course_group_members_table.Course_Group_id=lab_report_submissions.Course_Group_id
-where Lab_Report_ID=$id and lab_report_submissions.Status='Pending'");   
+where Lab_Report_ID=$id and lab_report_submissions.Status='Pending' order by Submission_Date desc");   
  }
  
 
