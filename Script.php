@@ -941,7 +941,7 @@ if($result>20)
                 return;
             }
           $date=  date("Y-m-d H:i");
-          $feedback="@$date : ".$feedback;
+          $feedback="<br>@$date : ".$feedback;
         
               $sql="UPDATE `lab_report_submissions` SET `Marks`='$marks',`Status`='$status',"
                       . ""
